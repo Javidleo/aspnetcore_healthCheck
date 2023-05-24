@@ -1,3 +1,6 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using TestHealthCheck;
 
 
@@ -23,12 +26,9 @@ builder.Services.AddSwaggerGen();
 //    x.AddHealthCheckEndpoint("Health Check", "/health");
 //}).AddInMemoryStorage();
 
-builder.Services.AddHealthCheck(); // add following lines for external dependencies
-                                   //.WithSqlServer("")
-                                   //.WithRabbitMq("user", "pass", "server")
-                                   //.WithRedis("con");
-
-builder.Services.AddHealthCheckUi("test application"); // adding the health check api on `health` endpoint
+builder.Services.AddHealthCheck();
+    //.WithService("", "test", tags: new[] { "Service" })
+    //.WithRabbitMq("guest", "guest", "localhost", tags: new[] { "Rabbit" });
 
 var app = builder.Build();
 
@@ -42,13 +42,12 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 
 // adding the middleware , host health check ui on `health-ui` endpoint by default
-app.UseHealthCheck();
 
+app.UseHealthCheck();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseHealthChecksUI();
 app.Run();

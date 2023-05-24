@@ -15,13 +15,14 @@ public static class HealthCheckConfiguration
     public static IHealthChecksBuilder WithSqlServer(this IHealthChecksBuilder builder,
         string connectionString,
         HealthStatus failureStatus = HealthStatus.Unhealthy,
-        string name = "Sql Server"
+        string name = "Sql Server",
+        IEnumerable<string>? tags = null
         )
     {
         builder.AddSqlServer(connectionString,
             failureStatus: failureStatus,
-            name: name
-            );
+            name: name,
+            tags: tags);
 
         return builder;
     }
@@ -34,7 +35,8 @@ public static class HealthCheckConfiguration
         HealthStatus failureStatus = HealthStatus.Unhealthy,
         SslOption? sslOption = default,
         string name = "RabbitMq",
-        TimeSpan? timeout = default)
+        TimeSpan? timeout = default,
+        IEnumerable<string>? tags = null)
     {
         var connection = $"amqp://{username}:{password}@{server}:{port}";
 
@@ -42,7 +44,8 @@ public static class HealthCheckConfiguration
             sslOption: sslOption,
             name: name,
             failureStatus: failureStatus,
-            timeout: timeout);
+            timeout: timeout,
+            tags: tags);
 
         return builder;
     }
@@ -52,7 +55,7 @@ public static class HealthCheckConfiguration
         string name = "Redis",
         HealthStatus? failureStatus = HealthStatus.Unhealthy,
         TimeSpan? timeout = default,
-        IEnumerable<string> tags = null
+        IEnumerable<string>? tags = null
         )
     {
         return builder.AddRedis(_ =>
@@ -96,6 +99,28 @@ public static class HealthCheckConfiguration
         return services;
     }
 
+    public static IHealthChecksBuilder WithService(this IHealthChecksBuilder builder,
+        string uri,
+        string name,
+        string healthCheckEndpoint = "health",
+        HealthStatus? failureStatus = HealthStatus.Unhealthy,
+        TimeSpan? timeout = null,
+        IEnumerable<string>? tags = null)
+    {
+        timeout ??= TimeSpan.FromSeconds(30);
+
+        builder.AddUrlGroup(new Uri($"{uri}/{healthCheckEndpoint}"),
+            name,
+            failureStatus,
+            timeout: timeout,
+            tags: tags
+        );
+
+        return builder;
+    }
+
+
+
     /// <summary>
     /// specifies the http status code for health status,
     /// <para> attention : put this method after app.UseRouting() method.</para> 
@@ -109,8 +134,7 @@ public static class HealthCheckConfiguration
     /// <param name="uiEndpoint"></param>
     /// <returns></returns>
     public static WebApplication UseHealthCheck(this WebApplication app,
-        string apiEndpoint = "health",
-        string uiEndpoint = "health-ui")
+        string apiEndpoint = "health")
     {
         app.UseEndpoints(endpoints =>
         {
@@ -118,14 +142,14 @@ public static class HealthCheckConfiguration
             {
                 ResultStatusCodes =
                 {
+
                     [HealthStatus.Healthy] = StatusCodes.Status200OK,
                     [HealthStatus.Degraded] = StatusCodes.Status500InternalServerError,
                     [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
                 },
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-
-            endpoints.MapHealthChecksUI(opt => opt.UIPath = $"/{uiEndpoint}");
+            endpoints.MapHealthChecksUI();
         });
         return app;
     }

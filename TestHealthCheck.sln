@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHealthCheck", "TestHealthCheck\TestHealthCheck.csproj", "{58478571-91C5-4276-8FA3-645C7F11B752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHealthCheck", "TestHealthCheck\TestHealthCheck.csproj", "{58478571-91C5-4276-8FA3-645C7F11B752}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCheckUI", "HealthCheckUI\HealthCheckUI.csproj", "{6F5FF640-714D-4689-883C-2A48E39A3A7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{58478571-91C5-4276-8FA3-645C7F11B752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58478571-91C5-4276-8FA3-645C7F11B752}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58478571-91C5-4276-8FA3-645C7F11B752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5FF640-714D-4689-883C-2A48E39A3A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5FF640-714D-4689-883C-2A48E39A3A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5FF640-714D-4689-883C-2A48E39A3A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5FF640-714D-4689-883C-2A48E39A3A7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
